@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Robot Vision Demo</title>
+  <link rel="stylesheet" href="/static/css/style.css?v=20260427_2" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>실내 로봇용 경로 주행 보조 비전 시스템</h1>
+  </header>
+
+  <main class="container">
+    <section class="left-panel">
+      <h2 class="section-title">영상 데모</h2>
+      <form id="videoUploadForm" class="upload-card wrap">
+        <input type="file" id="videoFile" name="file" accept="video/mp4,video/*" required />
+        <label>Sample FPS
+          <input type="number" id="sampleFps" value="5" min="1" max="15" step="1" class="small-input" />
+        </label>
+        <button type="submit">영상 분석 실행</button>
+        <span id="videoStatusText">대기 중</span>
+      </form>
+
+      <form id="uploadForm" class="upload-card hidden-section" aria-hidden="true">
+        <input type="file" id="imageFile" name="file" accept="image/*" required />
+        <button type="submit">이미지 파이프라인 실행</button>
+        <span id="statusText">대기 중</span>
+      </form>
+
+      <div class="main-grid">
+        <article class="img-card">
+          <h3>원본 이미지</h3>
+          <div class="media-slot">
+            <img id="imgOriginal" class="result-image" alt="original" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+        <article class="img-card">
+          <h3>객체 탐지 결과</h3>
+          <div class="media-slot">
+            <img id="imgDetection" class="result-image" alt="detection" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+        <article class="img-card">
+          <h3>위험 구역 오버레이</h3>
+          <div class="media-slot">
+            <img id="imgRisk" class="result-image" alt="risk" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+        <article class="img-card">
+          <h3>추천 경로 시각화</h3>
+          <div class="media-slot">
+            <img id="imgAstar" class="result-image" alt="astar" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+      </div>
+
+      <div class="sub-grid">
+        <article class="img-card small">
+          <h4>Drive Mask</h4>
+          <div class="media-slot">
+            <img id="imgDrive" class="result-image" alt="drive" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+        <article class="img-card small">
+          <h4>Obstacle Mask</h4>
+          <div class="media-slot">
+            <img id="imgObstacle" class="result-image" alt="obstacle" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+        <article class="img-card small">
+          <h4>Depth</h4>
+          <div class="media-slot">
+            <img id="imgDepth" class="result-image" alt="depth" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+        <article class="img-card small">
+          <h4>Cost Map</h4>
+          <div class="media-slot">
+            <img id="imgCost" class="result-image" alt="cost" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+      </div>
+
+      <section class="video-result-card">
+        <h3>결과 영상</h3>
+        <video id="resultVideo" controls></video>
+        <div class="video-controls">
+          <label>프레임 선택
+            <input type="range" id="frameSlider" min="0" max="0" value="0" />
+          </label>
+          <p id="frameMetaText">프레임 정보: -</p>
+        </div>
+      </section>
+    </section>
+
+    <aside class="right-panel">
+      <section class="info-block">
+        <h3>현재 모드</h3>
+        <p id="modeText">VIDEO</p>
+      </section>
+
+      <section class="info-block">
+        <h3>감지 객체 목록</h3>
+        <ul id="objList" class="plain-list"></ul>
+      </section>
+
+      <section class="info-block">
+        <h3>가까운 장애물 경고</h3>
+        <p id="warningText">-</p>
+      </section>
+
+      <section class="info-block">
+        <h3>현재 위험도</h3>
+        <p id="riskText">-</p>
+      </section>
+
+      <section class="info-block">
+        <h3>추천 이동 방향</h3>
+        <p id="directionText">-</p>
+      </section>
+
+      <section class="info-block">
+        <h3>경로 재계산 여부</h3>
+        <p id="recalcText">-</p>
+      </section>
+
+      <section class="info-block">
+        <h3>경로 정보</h3>
+        <p id="pathMeta">-</p>
+      </section>
+
+      <section class="info-block">
+        <h3>JSON 응답</h3>
+        <pre id="jsonDump"></pre>
+      </section>
+    </aside>
+  </main>
+
+  <script src="/static/js/app.js?v=20260427_2"></script>
+</body>
+</html>

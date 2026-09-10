@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Demo v1</title>
+  <link rel="stylesheet" href="/static/css/style.css?v=20260428_1" />
+</head>
+<body>
+  <main class="container" style="grid-template-columns: 1fr 350px;">
+    <section class="left-panel">
+      <h2 class="section-title">라이브 웹캠 모드 (Polling + 수동 Goal)</h2>
+      <div class="upload-card wrap">
+        <button id="startBtn">세션 시작</button>
+        <button id="camBtn">카메라 시작</button>
+        <button id="runBtn">전송 시작</button>
+        <button id="stopBtn">전송 중지</button>
+        <span id="statusText">대기 중</span>
+      </div>
+      <p>웹캠 화면 클릭으로 Goal 설정</p>
+
+      <div class="main-grid">
+        <article class="img-card">
+          <h3>웹캠 원본</h3>
+          <div class="media-slot">
+            <video id="cam" autoplay playsinline style="width:100%; height:220px; object-fit:contain; background:#111; border-radius:6px;"></video>
+          </div>
+        </article>
+        <article class="img-card">
+          <h3>추천 경로 시각화</h3>
+          <div class="media-slot">
+            <img id="imgAstar" class="result-image" alt="astar" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+        <article class="img-card">
+          <h3>객체 탐지 결과</h3>
+          <div class="media-slot">
+            <img id="imgDetection" class="result-image" alt="detection" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+        <article class="img-card">
+          <h3>위험 구역 오버레이</h3>
+          <div class="media-slot">
+            <img id="imgRisk" class="result-image" alt="risk" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+      </div>
+
+      <div class="sub-grid">
+        <article class="img-card small">
+          <h4>Drive Mask</h4>
+          <div class="media-slot">
+            <img id="imgDrive" class="result-image" alt="drive" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+        <article class="img-card small">
+          <h4>Obstacle Mask</h4>
+          <div class="media-slot">
+            <img id="imgObstacle" class="result-image" alt="obstacle" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+        <article class="img-card small">
+          <h4>Depth</h4>
+          <div class="media-slot">
+            <img id="imgDepth" class="result-image" alt="depth" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+        <article class="img-card small">
+          <h4>Cost Map</h4>
+          <div class="media-slot">
+            <img id="imgCost" class="result-image" alt="cost" hidden />
+            <div class="img-empty">결과 대기 중</div>
+          </div>
+        </article>
+      </div>
+      <canvas id="cap" width="640" height="360" hidden></canvas>
+    </section>
+    <aside class="right-panel">
+      <section class="info-block">
+        <h3>감지 객체 목록</h3>
+        <ul id="objList" class="plain-list"></ul>
+      </section>
+
+      <section class="info-block">
+        <h3>가까운 장애물 경고</h3>
+        <p id="warningText">-</p>
+      </section>
+
+      <section class="info-block">
+        <h3>현재 위험도</h3>
+        <p id="riskText">-</p>
+      </section>
+
+      <section class="info-block">
+        <h3>추천 이동 방향</h3>
+        <p id="directionText">-</p>
+      </section>
+
+      <section class="info-block">
+        <h3>경로 재계산 여부</h3>
+        <p id="recalcText">-</p>
+      </section>
+
+      <section class="info-block">
+        <h3>경로 정보</h3>
+        <p id="pathMeta">-</p>
+      </section>
+
+      <section class="info-block">
+        <h3>JSON 응답</h3>
+        <pre id="jsonDump"></pre>
+      </section>
+    </aside>
+  </main>
+  <script src="/static/js/live_demo.js?v=20260429_2"></script>
+</body>
+</html>
