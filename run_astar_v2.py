@@ -126,13 +126,13 @@ def find_goal(cost_map, drive_mask):
 
                 score = y * 3.0 + abs(x - x_center) * 2.0 + float(cost_map[y, x])
                 candidates.append((score, (y, x)))
-        
+
         print(f"band {left_ratio:.2f}~{right_ratio:.2f}, goal candidates:", len(candidates))
 
         if candidates:
             candidates.sort(key=lambda t: t[0])
             return candidates[0][1]
-            
+
 
     return None
 
