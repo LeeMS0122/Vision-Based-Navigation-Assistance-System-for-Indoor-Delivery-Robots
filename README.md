@@ -93,13 +93,23 @@ flowchart LR
 
 | 구분 | 주요 코드 | 설명 |
 |---|---|---|
-| 데이터 전처리 | `convert_aihub_camera_seg_to_yolo.py`, `prepare_scdepth_*.py` | AI Hub 라벨을 YOLO-seg·SC-Depth 학습 구조로 변환 |
-| YOLO 학습·추론 | `train_yolo_seg_wandb.py`, `run_yolo_infer.py` | 주행 가능 영역과 장애물 분할 |
-| 상대 심도 | `generate_pseudo_depth_*.py`, `infer_scdepth_sample.py` | 가상 심도 생성과 SC-Depth V3 추론 |
-| Cost Map | `build_cost_map*.py` | 주행 영역·장애물·상대 심도를 위험도 맵으로 합성 |
-| 경로계획 | `run_astar*.py` | 8방향 고전 A* 기반 안전 경로 탐색 |
-| 별도 학습 실험 | `train_neural_astar.py`, `infer_neural_astar.py` | Small U-Net 기반 경로 마스크 예측 실험 |
+| 실험 스크립트 | [`scripts/`](scripts/) | 데이터 준비·분할·상대 심도·Cost Map·경로계획 코드 |
 | 웹 데모 | `web_demo/` | 이미지·영상·실시간 입력을 처리하는 FastAPI 기반 데모 |
+
+```text
+.
+├── scripts/
+│   ├── data_preparation/   # AI Hub·SC-Depth 데이터 준비
+│   ├── segmentation/       # YOLO-seg 학습·추론
+│   ├── depth_estimation/   # 가상 심도·SC-Depth V3
+│   ├── costmap/            # 경로계획용 위험도 맵
+│   └── path_planning/      # 고전 A*·Small U-Net 실험
+├── web_demo/                # FastAPI 기반 통합 데모
+├── requirements.txt
+└── README.md
+```
+
+각 스크립트의 역할은 [`scripts/README.md`](scripts/README.md)에서 확인할 수 있습니다.
 
 ## ▶️ 실행 준비
 

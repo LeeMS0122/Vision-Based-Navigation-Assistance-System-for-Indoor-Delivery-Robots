@@ -169,7 +169,7 @@ http://<server-ip>:8000
 ## 6. 출력 구조
 
 - 기존 알고리즘을 최대한 유지하고 서비스 레이어에서 순차 연결
-- `cost_map`은 `build_cost_map_real_v2.py` 튜닝 규칙을 서비스로 이관해 사용
+- `cost_map`은 `scripts/costmap/build_cost_map_real_v2.py` 튜닝 규칙을 서비스로 이관해 사용
   - drivable/non-drivable 기본 cost
   - obstacle=255
   - obstacle dilation + buffer zone cost
