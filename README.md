@@ -6,7 +6,7 @@
 
 <p>
   <img src="https://img.shields.io/badge/Project-졸업작품-6C5CE7?style=for-the-badge" alt="졸업작품" />
-  <img src="https://img.shields.io/badge/Status-In_Progress-F9A826?style=for-the-badge" alt="진행 중" />
+  <img src="https://img.shields.io/badge/Status-Code_Released-00A86B?style=for-the-badge" alt="코드 공개" />
 </p>
 
 <p>
@@ -44,10 +44,10 @@ flowchart LR
     A["이미지·JSON 데이터"] --> B["파일 매칭·분포 검증"]
     B --> C["YOLO-seg 형식 변환"]
     C --> D["주행 영역·장애물 분할"]
-    D --> E["Depth 기반 근접 위험도"]
+    D --> E["SC-Depth V3 상대 심도 추정"]
     E --> F["Road·Obstacle·Depth 합성"]
     F --> G["Cost Map 생성"]
-    G --> H["A* / Neural A* 경로계획"]
+    G --> H["고전 A* 안전 경로 탐색"]
     H --> I["안전 경로 시각화"]
 ```
 
@@ -70,13 +70,13 @@ flowchart LR
 
 - Road Mask 기반 주행 가능 영역 표현
 - Obstacle Mask 기반 이동 제한 영역 표현
-- Depth 기반 근접 위험도 가중치 반영
+- SC-Depth V3의 상대 심도를 정규화해 근접 위험도 가중치 반영
 - 세 입력값 합성을 통한 경로계획용 Cost Map 생성
 
 ### 4. 경로계획 연결
 
-- A* 기반 최단 안전 경로 탐색
-- Neural A* 적용 가능성 검토
+- 웹 데모에 고전 A* 기반 최단 안전 경로 탐색 통합
+- Small U-Net 기반 경로 예측은 별도 실험 코드로 분리
 - 객체·위험 영역·추천 경로 통합 시각화
 
 ## 📊 현재 성과
@@ -87,14 +87,38 @@ flowchart LR
 | Validation 데이터 | 이미지·라벨 8,214건 |
 | 핵심 클래스 | `drivable_area`, `obstacle` |
 | 설계 결과 | Road·Obstacle·Depth 기반 Cost Map |
-| 개발 흐름 | 데이터 검증 → 변환 → 학습 → Cost Map → 경로계획 |
+| 개발 흐름 | 데이터 검증 → 변환 → 학습 → Cost Map → 고전 A* 경로계획 |
+
+## 🗂️ 코드 구성
+
+| 구분 | 주요 코드 | 설명 |
+|---|---|---|
+| 데이터 전처리 | `convert_aihub_camera_seg_to_yolo.py`, `prepare_scdepth_*.py` | AI Hub 라벨을 YOLO-seg·SC-Depth 학습 구조로 변환 |
+| YOLO 학습·추론 | `train_yolo_seg_wandb.py`, `run_yolo_infer.py` | 주행 가능 영역과 장애물 분할 |
+| 상대 심도 | `generate_pseudo_depth_*.py`, `infer_scdepth_sample.py` | 가상 심도 생성과 SC-Depth V3 추론 |
+| Cost Map | `build_cost_map*.py` | 주행 영역·장애물·상대 심도를 위험도 맵으로 합성 |
+| 경로계획 | `run_astar*.py` | 8방향 고전 A* 기반 안전 경로 탐색 |
+| 별도 학습 실험 | `train_neural_astar.py`, `infer_neural_astar.py` | Small U-Net 기반 경로 마스크 예측 실험 |
+| 웹 데모 | `web_demo/` | 이미지·영상·실시간 입력을 처리하는 FastAPI 기반 데모 |
+
+## ▶️ 실행 준비
+
+```bash
+git clone git@github.com:LeeMS0122/Vision-Based-Navigation-Assistance-System-for-Indoor-Delivery-Robots.git
+cd Vision-Based-Navigation-Assistance-System-for-Indoor-Delivery-Robots
+python -m pip install -r requirements.txt
+```
+
+실험 스크립트는 파일 상단의 경로 설정을 자신의 데이터셋·가중치 경로로 변경해 사용합니다. SC-Depth V3 소스와 학습 가중치는 별도로 준비해야 합니다.
+
+웹 데모 실행 방법과 필요 환경 변수는 [`web_demo/README.md`](web_demo/README.md)에 정리했습니다.
 
 ## 🛠️ 기술 및 실험 환경
 
 <p>
   <img src="https://img.shields.io/badge/Depth_Estimation-34495E?style=flat-square" alt="Depth Estimation" />
   <img src="https://img.shields.io/badge/A*-E67E22?style=flat-square" alt="A star" />
-  <img src="https://img.shields.io/badge/Neural_A*-8E44AD?style=flat-square" alt="Neural A star" />
+  <img src="https://img.shields.io/badge/Small_U--Net-8E44AD?style=flat-square" alt="Small U-Net" />
   <img src="https://img.shields.io/badge/Weights_&_Biases-FFBE00?style=flat-square&logo=weightsandbiases&logoColor=black" alt="Weights and Biases" />
   <img src="https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=linux&logoColor=black" alt="Linux" />
   <img src="https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white" alt="Notion" />
@@ -106,16 +130,18 @@ flowchart LR
 - [x] JSON Polygon → YOLO Segmentation 변환
 - [x] 주행 영역·장애물 중심 클래스 재구성
 - [x] Road·Obstacle·Depth 기반 Cost Map 구조 설계
+- [x] SC-Depth V3 상대 심도와 Cost Map 통합
+- [x] 고전 A* 경로 탐색 웹 데모 통합
+- [x] Small U-Net 기반 경로 예측 별도 실험
 - [ ] YOLO-seg 모델 성능 고도화
-- [ ] Depth 추정 결과와 Cost Map 통합
-- [ ] A*·Neural A* 경로 비교
 - [ ] 실제 주행 환경 검증
 
 ## 📂 저장소 공개 범위
 
-- 프로젝트 개요와 개발 흐름 우선 공개
-- AI Hub 원본 데이터 미포함
-- 코드·실험 결과·시각화 자료 순차 정리 예정
+- Python·HTML·CSS·JavaScript 소스 코드와 실행 문서만 공개
+- AI Hub 원본 데이터와 변환 데이터셋 미포함
+- 학습 가중치, 체크포인트, W&B 로그, 실험 결과 이미지·영상 미포함
+- 웹 데모 모델 경로는 환경 변수로 분리하고, 생성 산출물과 비밀값은 `.gitignore`로 제외
 
 ---
 
