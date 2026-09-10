@@ -2,6 +2,20 @@
 
 루트에 나열되어 있던 실험 코드를 실행 단계에 따라 다섯 영역으로 구분했습니다. 각 스크립트의 경로 상수는 자신의 데이터셋·모델 환경에 맞게 설정해야 합니다.
 
+## 권장 실행 순서
+
+```text
+data_preparation
+       ↓
+segmentation + depth_estimation
+       ↓
+costmap
+       ↓
+path_planning
+       ↓
+web_demo
+```
+
 ## `data_preparation/` — 데이터 준비
 
 | 파일 | 설명 |
