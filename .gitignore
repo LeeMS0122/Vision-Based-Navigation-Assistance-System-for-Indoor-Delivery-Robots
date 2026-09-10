@@ -1,0 +1,67 @@
+# Python cache and local environments
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# Local editor and Codex metadata
+.vscode/
+.idea/
+.agents/
+.codex/
+.codex_slide_merge/
+
+# Secrets and machine-specific settings
+.env
+.env.*
+!.env.example
+
+# Datasets, training logs, checkpoints, and generated outputs
+data/
+datasets/
+runs/
+wandb/
+outputs/
+*_outputs/
+label_vis/
+planner_dataset/
+planner_ckpts/
+web_demo/data/
+web_demo/outputs/
+web_demo/uploads/
+
+# Model weights and numerical artifacts
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.engine
+*.npy
+*.npz
+
+# Images, videos, archives, and local presentation material
+*.png
+*.jpg
+*.jpeg
+*.bmp
+*.gif
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.zip
+*.tar
+*.tar.gz
+*.7z
+*.pptx
+*.pdf
+발표_*
+
+# OS files
+.DS_Store
+Thumbs.db
